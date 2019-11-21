@@ -1,0 +1,85 @@
+---
+title: ''
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+
+
+```{r,fig.height=4.8}
+library(readxl)
+library(ggplot2)
+
+
+data <- read_excel("Diplomacy_W129.xlsx")
+data  <- data.frame(data)
+
+
+city_state <- c("Kathmandu",
+"Yerevan",
+"Kyzyl",
+"Florence",
+"Budapest",
+"Singapore",
+"Mombasa",
+"Panama City",
+"Bogota",
+"Ife")
+
+
+
+data2 <- data[-which(data$author.civ %in% city_state | data$subject.civ %in% city_state),]
+
+
+
+d1 <- aggregate(cable ~ turn, data = data2, FUN = length)
+
+d2 <- aggregate(cable ~ author.civ, data = data2, FUN = length)
+
+d3 <- aggregate(cable ~ subject.civ, data = data2, FUN = length)
+
+d4 <- d2
+d4[5,2] <- d4[5,2] + d4[6,2]
+d4 <- d4[-6,]
+
+d5 <- d3
+d5[5,2] <- d5[5,2] + d5[6,2]
+d5[7,2] <- d5[7,2] + d5[8,2]
+
+d5 <- d5[-c(6,8),]
+
+
+ggplot(d1, aes(turn,cable)) + geom_point() + geom_smooth()
+
+ggplot(d4, aes(author.civ,cable)) + geom_bar(stat = "identity")+ theme(axis.text.x = element_text(angle = 45,size = 12)) + 
+  geom_text(aes(label=cable), vjust=-0.2)
+
+ggplot(d5, aes(subject.civ,cable)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 45,size = 12)) +
+  geom_text(aes(label=cable), vjust=-0.2)
+
+d6 <- data.frame(civ = c(d4$author.civ,d5$subject.civ), cable = c(d4$cable,d5$cable),
+                 type = rep(c("author","subject"),each=6))
+
+ggplot(d6, aes(civ,cable, fill = type)) + geom_bar(stat = "identity",position = "dodge") + theme(axis.text.x = element_text(angle = 45,size = 12)) +
+  geom_text(aes(label=cable), position=position_dodge(width=0.9), vjust=-0.2)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
