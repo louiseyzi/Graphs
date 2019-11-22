@@ -101,7 +101,7 @@ plot_it <- function(country, dataname) {
    rownames(mat2) <- uns
    
 
-  cols <- brewer.pal(name="RdYlGn", length_uniquevalues)
+  cols <- rev(brewer.pal(name="RdYlGn", length_uniquevalues))
   
   if(dataname == "Diplomatic Stance") {
     cols2 <- cols[c(5,1,3,6,4,7,2)]  }
@@ -111,19 +111,22 @@ plot_it <- function(country, dataname) {
 
   }
 
-   par(xpd = T, mar = par()$mar + c(0,0,0,7))
+  par(xpd = T, mar = par()$mar + c(0,0,0, 8))
   
-   barplot(t(mat2), col = cols2, border = NA, horiz = TRUE,  space = 1.2,
-           xlab = "Turn",
-           main = paste0(dataname, " of ",country," Toward other Countries"))
-   
-   if(dataname == "Diplomatic Opinion") nm <- c("ally","friend","favorable","neutral","None","competitor","enemy", "archnemesis")
-   else nm <- c("friendly","afraid","neutral","guarded","None","deceptive","hostile")
-   legend(500,8, nm, pch = 15, col = as.character(cols), bty = "n")
-   
-   par(mar=c(5, 4, 4, 2) + 0.1)
-   graph2tif(file = paste0(dataname, " of ",country," Toward other Countries"),
-             width = 8, height = 6)
+  barplot(t(mat2), col = cols2, border = NA, horiz = TRUE,  space = 1.2,
+          xlab = "Turn",
+          main = paste0(dataname, " of ",country," Toward other Countries"))
+  
+  if(dataname == "Diplomatic Opinion") {
+    nm <- c("ally","friend","favorable","neutral","None","competitor","enemy", "archnemesis")
+  }   else { nm <- c("friendly","afraid","neutral","guarded","None","deceptive","hostile")}
+  
+  legend(500,8, nm, pch = 15, col = as.character(cols), bty = "n")
+  
+  par(mar=c(5, 4, 4, 2) + 0.1)
+  graph2tif(file = paste0(dataname, " of ",country," Toward other Countries"),
+            width = 6.58, height = 5.5)
+  
    
 } 
 
