@@ -57,9 +57,9 @@ DO <- do
 plot_it <- function(country, dataname) {
   
   if(dataname == "Diplomatic Stance") DO <- DS
-  if(dataname == "Diplomatic Opinions") DO <- DO
+  if(dataname == "Diplomatic Opinion") DO <- DO
   
-  uniquevalues <- c( as.character(unique(DO$Value)))
+  uniquevalues <- c(as.character(unique(DO$Value)))
   
   length_uniquevalues <- length(uniquevalues)
   
@@ -102,13 +102,25 @@ plot_it <- function(country, dataname) {
    
 
   cols <- brewer.pal(name="RdYlGn", length_uniquevalues)
+  
+  if(dataname == "Diplomatic Stance") {
+    cols2 <- cols[c(5,1,3,6,4,7,2)]  }
+
+  if(dataname == "Diplomatic Opinion")  {
+    cols2 <- cols[c(5,4,3,6,7,8,2,1)]
+
+  }
+
    par(xpd = T, mar = par()$mar + c(0,0,0,7))
   
-   barplot(t(mat2), col = cols, border = NA, horiz = TRUE,  space = 1.2,
+   barplot(t(mat2), col = cols2, border = NA, horiz = TRUE,  space = 1.2,
            xlab = "Turn",
            main = paste0(dataname, " of ",country," Toward other Countries"))
    
-   legend(500,8, uniquevalues, pch = 15, col = cols, bty = "n")
+   if(dataname == "Diplomatic Opinion") nm <- c("ally","friend","favorable","neutral","None","competitor","enemy", "archnemesis")
+   else nm <- c("friendly","afraid","neutral","guarded","None","deceptive","hostile")
+   legend(500,8, nm, pch = 15, col = as.character(cols), bty = "n")
+   
    par(mar=c(5, 4, 4, 2) + 0.1)
    graph2tif(file = paste0(dataname, " of ",country," Toward other Countries"),
              width = 8, height = 6)
